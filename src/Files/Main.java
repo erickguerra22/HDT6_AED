@@ -1,6 +1,5 @@
 package Files;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -45,129 +44,40 @@ public class Main {
 				int option = pregunta(menu, 8, scan);
 				String cathegory = "";
 				String product = "";
+				String products = "";
 				int quantity = 0;
 				boolean repeat = true;
 				switch(option) { 
 				case 1:
-					while(repeat) {
-						System.out.println("Ingrese la categoría del producto que desea agregar:");
-						cathegory = scan.nextLine();
-						if(store.getInventory().containsKey(cathegory)) {
-							repeat = false;
-							ArrayList<String> products = store.getInventory().get(cathegory);
-							System.out.println("A continuación se muestra una lista de los productos disponibles en esta categoria");
-							for(String p:products)
-								System.out.println(p);
-							System.out.println("Escriba el nombre completo del producto que desea agregar:");
-							product = scan.nextLine();
-							if(products.contains(product)) {
-								System.out.println("Producto disponible.");
-								quantity = numeroEntero("Indique la cantidad que desea adquirir",scan);
-								while(quantity>0) {
-									store.addToCollection(cathegory,product);
-									quantity--;
-								}
-								System.out.println("Productos agregados a la colección correctamente");
-							}else
-								System.out.println("Error: El producto indicado no forma parte de esta colección.");
-						}else
-							System.out.println("Error: La categoría indicada no está disponible, intente nuevamente");
-					}
+					System.out.println("Productos disponibles:");
+					System.out.println(store.getInventorySorted());
+					System.out.println("Ingrese la categoría del producto que desea agregar:");
+					cathegory = scan.nextLine();
+					System.out.println("Escriba el nombre completo del producto que desea agregar:");
+					product = scan.nextLine();
+					quantity = numeroEntero("Indique la cantidad que desea adquirir",scan);
+					store.addProduct(cathegory, product, quantity);
 					break;
 				case 2:
 					System.out.println("Ingrese el nombre completo del producto del que desa conocer su categoría:");
 					product = scan.nextLine();
-					cathegory = null;
-					for(String k : store.getInventory().keySet()) {
-						if(store.getInventory().get(k).contains(product))
-							cathegory = k;
-					}
+					cathegory = store.getCathegory(product);
 					if(cathegory == null)
 						System.out.println("El producto ingresado no pertenece a ninguna categoría existente.");
 					else
 						System.out.println("El producto pertenece a la categoría: \""+cathegory+"\"");
 					break;
 				case 3:
-					if(store.getCollection().isEmpty())
-						System.out.println("Actualmente no existen productos en la colección.");
-					else {
-						System.out.println("Categoría | Producto | Cantidad");
-						for(String k : store.getCollection().keySet()) {
-							cathegory = k;
-							if(!store.getCollection().get(k).isEmpty()) {
-								ArrayList<String> products = new ArrayList<String>();
-								for(String p : store.getCollection().get(k)) {
-									if(!products.contains(p)) {
-										product = p;
-										products.add(product);
-										quantity = store.productQuantity(store.getCollection().get(k), product);
-										System.out.println(cathegory + " | " + product + " | "+quantity);
-									}
-								}
-							}
-						}
-					}
+					System.out.println(store.getCollection());
 					break;
 				case 4:
-					if(store.getCollection().isEmpty())
-						System.out.println("Actualmente no existen productos en la colección.");
-					else {
-						System.out.println("Categoría | Producto | Cantidad");
-						for(String k : store.sortedKeys(store.getCollection())) {
-							cathegory = k;
-							if(!store.getCollection().get(k).isEmpty()) {
-								ArrayList<String> products = new ArrayList<String>();
-								for(String p : store.sortedProducts(store.getCollection().get(k))) {
-									if(!products.contains(p)) {
-										product = p;
-										products.add(product);
-										quantity = store.productQuantity(store.getCollection().get(k), product);
-										System.out.println(cathegory + " | " + product + " | "+quantity);
-									}
-								}
-							}
-						}
-					}
+					System.out.println(store.getCollectionSorted());
 					break;
 				case 5:
-					if(store.getInventory().isEmpty())
-						System.out.println("Actualmente no existen productos en el inventario.");
-					else {
-						System.out.println("Categoría | Producto");
-						for(String k : store.getInventory().keySet()) {
-							cathegory = k;
-							if(!store.getInventory().get(k).isEmpty()) {
-								ArrayList<String> products = new ArrayList<String>();
-								for(String p : store.sortedProducts(store.getInventory().get(k))) {
-									if(!products.contains(p)) {
-										product = p;
-										products.add(product);
-										System.out.println(cathegory + " | " + product);
-									}
-								}
-							}
-						}
-					}
+					System.out.println(store.getInventory());
 					break;
 				case 6:
-					if(store.getInventory().isEmpty())
-						System.out.println("Actualmente no existen productos en el inventario.");
-					else {
-						System.out.println("Categoría | Producto");
-						for(String k : store.sortedKeys(store.getInventory())) {
-							cathegory = k;
-							if(!store.getInventory().get(k).isEmpty()) {
-								ArrayList<String> products = new ArrayList<String>();
-								for(String p : store.getInventory().get(k)) {
-									if(!products.contains(p)) {
-										product = p;
-										products.add(product);
-										System.out.println(cathegory + " | " + product);
-									}
-								}
-							}
-						}
-					}
+					System.out.println(store.getInventorySorted());
 					break;
 				case 7:
 					System.out.println("Eliminando el contenido de la colección...");
@@ -221,6 +131,7 @@ public class Main {
 				else System.out.println("\nRepuesta no valida.\n");
 			}    
 		} catch (Exception e) {
+			scan.nextLine();
 			System.out.println("\nRepuesta no valida. Ingrese solamente numeros.\n");
 			num = numeroEntero(pregunta, scan);
 		}

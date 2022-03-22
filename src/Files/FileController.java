@@ -48,12 +48,7 @@ public class FileController {
 	 * @throws IOException
 	 */
 	public static void writeFile(String text, String fileName) throws IOException {
-		String newPath = "";
-		if(!fileName.equals(""))
-			newPath = System.getProperty("user.dir") + "\\" + fileName;
-		else
-			newPath = PATH;
-        File file = new File(newPath);
+		File file = new File(PATH);
         if (!file.exists()) {
             file.createNewFile();
         }
