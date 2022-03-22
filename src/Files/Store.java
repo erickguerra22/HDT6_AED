@@ -1,6 +1,3 @@
-/**
- * 
- */
 package Files;
 
 import java.io.IOException;
@@ -15,9 +12,9 @@ public class Store {
 	private Map<String, ArrayList<String>> collection;
 	
 	public Store(int implementation) {
-		MapFactory<String,ArrayList<String>> mapFactory = new MapFactory<>(implementation); //Se determina el tipo de Map a instanciar
-		inventory = mapFactory.getInstance();
-		collection = mapFactory.getInstance();
+		MapFactory<String,ArrayList<String>> mapFactory = new MapFactory<>();
+		inventory = mapFactory.getMap(implementation);
+		collection = mapFactory.getMap(implementation);
 	}
 	
 	public boolean findFile() {
@@ -29,6 +26,36 @@ public class Store {
 			return true;
 		} catch (IOException e) { //Si no se encuentra el archivo
 			return false;
+		}
+	}
+	
+	public void saveInventory() {
+		String text = "Categoría | Producto\n";
+		for(String k : collection.keySet()) {
+			for(String p : collection.get(k)) {
+				text += k + " | " + p +"\n";
+			}
+		}
+		mapToFile(text,"");
+	}
+	
+	public void saveCollection() {
+		String text = "Categoría | Producto | Cantidad\n";
+		for(String k : collection.keySet()) {
+			for(String p : collection.get(k)) {
+				int quantity = productQuantity(collection.get(k), p);
+				text += k + " | " + p + " | " + quantity;
+			}
+		}
+		mapToFile(text,"collection.txt");
+	}
+	
+	public void mapToFile(String text, String fileName) {
+		try {
+			FileController.writeFile(text, fileName);
+		} catch (IOException e) {
+			System.out.println("Ha ocurrido un error al guardar la información.");
+			e.printStackTrace();
 		}
 	}
 	
@@ -62,12 +89,32 @@ public class Store {
 		return quantity;
 	}
 	
+	public ArrayList<String> sortedProducts(ArrayList<String> products){
+		Collections.sort(products, new SortAlphabetically());
+		return products;
+	}
+	
+	public ArrayList<String> sortedKeys(Map<String, ArrayList<String>> map){
+		ArrayList<String> keys = new ArrayList<String>(map.keySet());
+		Collections.sort(keys, new SortAlphabetically());
+		return keys;
+	}
+	
 	public Map<String, ArrayList<String>> getInventory() {
 		return inventory;
 	}
 	
 	public Map<String, ArrayList<String>> getCollection() {
 		return collection;
+	}
+	
+}
+
+class SortAlphabetically implements Comparator<String>{
+
+	@Override
+	public int compare(String o1, String o2) {
+		return o1.compareTo(o2);
 	}
 	
 }
