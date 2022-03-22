@@ -1,5 +1,7 @@
 package Files;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -25,10 +27,19 @@ public class Main {
 					3. LinkedHashMap""";
 			int implementation = pregunta(menu, 3, scan)-1;
 			Store store = new Store(implementation);
-			while(!store.findFile()) {
-				System.out.println("\nArchivo no encontrado.\nPor favor, asegurese de que el archivo inventario.txt sea valido y se encuentre en la carpeta donde se encuentra el programa.");
-				System.out.println("Presione enter para volver a buscar el archivo.");
-				scan.nextLine();
+			boolean found = false;
+			while(!found) {
+				String[] fileContent = null;
+				boolean repeat = true;
+				try { //Se encuentra el archivo
+					fileContent = FileController.readFile();
+					fileToMap(fileContent, store);
+					found = true;
+				} catch (IOException e) { //Si no se encuentra el archivo
+					System.out.println("\nArchivo no encontrado.\nPor favor, asegurese de que el archivo inventario.txt sea valido y se encuentre en la carpeta donde se encuentra el programa.");
+					System.out.println("Presione enter para volver a buscar el archivo.");
+					scan.nextLine();
+				}
 			}				
 			System.out.println("\nArchivo encontrado.");
 			while(!end) {
@@ -136,5 +147,18 @@ public class Main {
 			num = numeroEntero(pregunta, scan);
 		}
 		return num;
+	}
+	
+	public static void fileToMap(String[] fileContent, Store store) {
+		for (String row : fileContent) {
+			String[] elements = row.split("\\|");
+			String cathegory = elements[0].trim();
+			String product = elements[1].trim();
+			ArrayList<String> products = new ArrayList<String>();
+			if(store.getInventoryMap().containsKey(cathegory))
+				products = store.getInventoryMap().get(cathegory);
+			products.add(product);
+			store.getInventoryMap().put(cathegory, products);
+		}
 	}
 }

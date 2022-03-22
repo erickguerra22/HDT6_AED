@@ -17,18 +17,6 @@ public class Store {
 		collection = mapFactory.getMap(implementation);
 	}
 	
-	public boolean findFile() {
-		String[] fileContent = null;
-		boolean repeat = true;
-		try { //Se encuentra el archivo
-			fileContent = FileController.readFile();
-			fileToMap(fileContent);
-			return true;
-		} catch (IOException e) { //Si no se encuentra el archivo
-			return false;
-		}
-	}
-	
 	public String getProducts(String cathegory) {
 		String listProducts = "";
 		ArrayList<String> products = inventory.get(cathegory);
@@ -169,19 +157,6 @@ public class Store {
 		return productList;
 	}
 	
-	public void fileToMap(String[] fileContent) {
-		for (String row : fileContent) {
-			String[] elements = row.split("\\|");
-			String cathegory = elements[0].trim();
-			String product = elements[1].trim();
-			ArrayList<String> products = new ArrayList<String>();
-			if(inventory.containsKey(cathegory))
-				products = inventory.get(cathegory);
-			products.add(product);
-			inventory.put(cathegory, products);
-		}
-	}
-	
 	public int productQuantity(ArrayList<String> products, String product) {
 		int quantity = 0;
 		for(String p:products) {
@@ -200,6 +175,14 @@ public class Store {
 		ArrayList<String> keys = new ArrayList<String>(map.keySet());
 		Collections.sort(keys, new SortByCathegory());
 		return keys;
+	}
+	
+	public Map<String, ArrayList<String>> getInventoryMap(){
+		return this.inventory;
+	}
+	
+	public Map<String, ArrayList<String>> getCollectionMap(){
+		return this.collection;
 	}
 }
 
