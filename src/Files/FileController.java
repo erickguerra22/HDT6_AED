@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 /**
  * Clase FileController.
- * @author Erick Guerra
- * @version 21/03/2022
+ * @author Diego Morales, Pablo Zamora, Erick Guerra
+ * @version 02/03/2022
  *
  */
 
@@ -47,16 +47,18 @@ public class FileController {
 	 * @param text. Contenido del archivo
 	 * @throws IOException
 	 */
-	public static void writeFile(String text, String fileName) throws IOException {
-        File file = new File(PATH);
-        if (!file.exists()) {
-            file.createNewFile();
-        }
+	public static void writeFile(String text) throws IOException {
+       
 
-        FileWriter fw = new FileWriter(file);
+            File file = new File(PATH);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
 
-        fw.write(text);
-        fw.close();        
+            FileWriter fw = new FileWriter(file);
+
+            fw.write(text);
+            fw.close();        
 
     }
 	

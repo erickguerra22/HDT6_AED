@@ -3,19 +3,18 @@ package Files;
 import java.util.*;
 
 public class MapFactory<T,V> {
+	private Map<T,V> myMap;
 	
-	public MapFactory() {
-		
-	}
-	
-	public Map<T,V> getMap(int implementation) {
+	public MapFactory(int implementation) {
 		if(implementation == 0)
-			return new HashMap<T,V>();
+			myMap = new HashMap<T,V>();
 		else if(implementation == 1)
-			return new TreeMap<T,V>();
+			myMap = new TreeMap<T,V>();
 		else if(implementation == 2)
-			return new LinkedHashMap<T,V>();
-		else
-			return null;
+			myMap = new LinkedHashMap<T,V>();
 	}
+	
+	public Map<T,V> getInstance(){
+		return this.myMap;
+	}	
 }
